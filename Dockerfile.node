@@ -22,6 +22,12 @@ ENV PUPPETEER_SKIP_DOWNLOAD=false
 
 WORKDIR /usr/src/app
 
-# Do not copy application code; we'll mount it at runtime.
+# Copy entrypoint for cloning node apps
+COPY node-entrypoint.sh /usr/local/bin/node-entrypoint.sh
+RUN chmod +x /usr/local/bin/node-entrypoint.sh
 
-CMD ["sh", "-c", "npm install --no-fund --no-audit || true && npm run start || sleep infinity"]
+# Do not copy application code; entrypoint will clone repos into /usr/src/apps
+ENV APPS_DIR=/usr/src/apps
+
+ENTRYPOINT ["/usr/local/bin/node-entrypoint.sh"]
+CMD ["sh", "-c", "echo 'No default start command. Enter container and run your app.' && sleep infinity"]
