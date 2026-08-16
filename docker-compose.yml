@@ -1,0 +1,40 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: docker-launcher-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8080:80"
+    environment:
+      APP_ENV: local
+      DB_HOST: mysql
+      DB_DATABASE: launcher_db
+      DB_USERNAME: launcher
+      DB_PASSWORD: launcherpass
+      DB_PORT: 3306
+      PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium
+      CHROME_BIN: /usr/bin/chromium
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.4
+    container_name: docker-launcher-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: launcher_db
+      MYSQL_USER: launcher
+      MYSQL_PASSWORD: launcherpass
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

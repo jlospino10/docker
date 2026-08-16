@@ -1,0 +1,12 @@
+{
+  "name": "docker-launcher",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node -e \"console.log('Node ready in Docker');\"",
+    "test-puppeteer": "node -e \"const puppeteer = require('puppeteer'); (async () => { const browser = await puppeteer.launch({headless: 'new', args: ['--no-sandbox', '--disable-setuid-sandbox']}); const page = await browser.newPage(); await page.goto('https://example.com'); console.log(await page.title()); await browser.close(); })();\""
+  },
+  "dependencies": {
+    "puppeteer": "^24.0.0"
+  }
+}
