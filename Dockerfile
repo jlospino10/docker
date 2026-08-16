@@ -24,7 +24,11 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 
 WORKDIR /var/www/html
 
-COPY . /var/www/html
+# Do not copy the application code here — the container will clone the repo at runtime
+
+# Copy entrypoint script that will clone the repo into /var/www/html
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 RUN chown -R www-data:www-data /var/www/html \
     && a2enmod rewrite headers
@@ -32,9 +36,7 @@ RUN chown -R www-data:www-data /var/www/html \
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 ENV PUPPETEER_SKIP_DOWNLOAD=false
 
-COPY package.json ./package.json
-RUN npm install --no-fund --no-audit || true
-
 EXPOSE 80
 
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["apache2-foreground"]

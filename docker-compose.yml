@@ -6,10 +6,12 @@ services:
     container_name: docker-launcher-php
     restart: unless-stopped
     working_dir: /var/www/html
-    volumes:
-      - ../apps-oficial:/var/www/html:cached
+    # No bind mount: code is cloned from the remote repo inside the container to avoid touching local changes
     ports:
       - "8080:80"
+    environment:
+      REPO_URL: "https://github.com/jlospino10/apps-oficial.git"
+      BRANCH: "main"
     environment:
       APP_ENV: local
       DB_HOST: mysql
