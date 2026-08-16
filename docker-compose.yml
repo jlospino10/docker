@@ -40,6 +40,8 @@ services:
       NODE_BRANCH1: "main"
       NODE_REPO2: "https://github.com/jlospino10/apiswhatv3.git"
       NODE_BRANCH2: "main"
+      NODE_REPO3: "https://github.com/jlospino10/sniffer-pro.git"
+      NODE_BRANCH3: "main"
       APPS_DIR: "/usr/src/apps"
     command: sh -c "echo 'Node launcher ready. Repos cloned to /usr/src/apps; exec into specific folder to run app.' && sleep infinity"
     depends_on:
