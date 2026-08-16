@@ -1,0 +1,27 @@
+FROM node:20-bullseye
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  ca-certificates \
+  gnupg \
+  wget \
+  chromium \
+  fonts-liberation \
+  libappindicator3-1 \
+  libasound2 \
+  libatk-bridge2.0-0 \
+  libgtk-3-0 \
+  libx11-6 \
+  libxcomposite1 \
+  libxdamage1 \
+  libxrandr2 \
+  libgbm1 \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+ENV PUPPETEER_SKIP_DOWNLOAD=false
+
+WORKDIR /usr/src/app
+
+# Do not copy application code; we'll mount it at runtime.
+
+CMD ["sh", "-c", "npm install --no-fund --no-audit || true && npm run start || sleep infinity"]

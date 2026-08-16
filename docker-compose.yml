@@ -1,13 +1,13 @@
 services:
-  app:
+  php:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: docker-launcher-app
+    container_name: docker-launcher-php
     restart: unless-stopped
     working_dir: /var/www/html
     volumes:
-      - .:/var/www/html
+      - ../apps-oficial:/var/www/html:cached
     ports:
       - "8080:80"
     environment:
@@ -17,8 +17,25 @@ services:
       DB_USERNAME: launcher
       DB_PASSWORD: launcherpass
       DB_PORT: 3306
+    depends_on:
+      - mysql
+
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    container_name: docker-launcher-node
+    restart: unless-stopped
+    working_dir: /usr/src/app
+    volumes:
+      - ../node-apps:/usr/src/app:cached
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
       PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium
       CHROME_BIN: /usr/bin/chromium
+    command: sh -c "npm install --no-fund --no-audit || true && npm run start || sleep infinity"
     depends_on:
       - mysql
 
@@ -35,6 +52,19 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: docker-launcher-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: rootpass
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
 
 volumes:
   mysql_data:
